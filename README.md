@@ -4,11 +4,11 @@ O objetivo principal do projeto é fazer uma análise de dados da situação do 
 ## Etapas
 
 ### 1ª Etapa
-Como objetivo secundário, e primeira etapa do projeto, queremos melhorar a visualização dos dados. Para isso, fazemos um scrapping do site que contém todos os registros de casos.
+Como primeira etapa do projeto queremos criar uma tabela para guardar as informações do painel de covid. Para isso, fazemos um scrapping do site que contém todos os registros de casos.
 
 https://geo.londrina.pr.gov.br/portal/apps/opsdashboard/index.html#/d2d6fcd7cb5248a0bebb8c90e2a4a482
 
-Não encontramos nenhum registro de arquivo ou tabela com essas informações, por isso a necessidade do scrapping. Nessa etapa estamos criando um arquivo csv para ser a nossa base.
+Nessa etapa estaremos criando um arquivo csv para ser a nossa base.
 
 #### Estrutura da tabela
 As informações que constam no dashboard disponibilizado pela prefeitura são divididos em dois painéis: evolução dos casos e recuperados/óbitos
@@ -49,5 +49,7 @@ Para a primeira informação de média móvel precisamos esperar 7 dias. Ao cheg
             
 
 
-### Próximas etapas
-Em planejamento
+### 2ª Etapa
+Desenvolvimento de uma visualização para os dados
+
+EM ANDAMENTO

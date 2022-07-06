@@ -7,7 +7,7 @@ import re, csv, datetime
 def main():
     # Set parameters to get url
     url = 'https://geo.londrina.pr.gov.br/portal/apps/opsdashboard/index.html#/d2d6fcd7cb5248a0bebb8c90e2a4a482'
-    driver = webdriver.Chrome(r'C:\chromedriver.exe')
+    driver = webdriver.Chrome(r'C:\chromedriver\chromedriver.exe')
     driver.get(url)
 
     # Set parameters to get records
