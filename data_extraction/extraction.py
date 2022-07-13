@@ -41,7 +41,7 @@ def extract_records(driver):
 
 def write_csv(cases, healed, deaths):
     with open("../total_records.csv", 'w', newline="") as csv_file:
-        header = ["id", "dia", "mes", "ano", "casos confirmados", "novos casos",
+        header = ["id", "data", "casos confirmados", "novos casos",
                   "recuperados", "novos recuperados", "obitos", "novos obitos",
                   "dia da semana", "media movel confirmados", "media movel obitos"]
         writer = csv.writer(csv_file)
@@ -65,6 +65,7 @@ def write_csv(cases, healed, deaths):
             month = re.search("\s[a-zA-Z]{3}", cases[i]).group().strip(" ").lower()
             day = re.search("\s[0-9]{2}", cases[i]).group().strip(" ")
             year = re.search("\s[0-9]{4}\s", cases[i]).group().strip(" ")
+            date = f"{day}-{month}-{year}"
             weekday = get_weekday(day, month, year)
 
             # Get today's cases. That's the accumulated cases from url data
@@ -109,10 +110,11 @@ def write_csv(cases, healed, deaths):
                 deaths_last_seven_days.pop(0)
 
             record_id = i + 1
-            row = [record_id, day, month, year, total_cases, daily_cases,
+            row = [record_id, date, total_cases, daily_cases,
                    total_healed, daily_healed, total_deaths,
                    daily_deaths, weekday, moving_avg_cases,
                    moving_avg_deaths]
+
             writer.writerow(row)
 
             moving_avg_cases = 0
@@ -122,9 +124,10 @@ def write_csv(cases, healed, deaths):
 def get_weekday(day, month, year):
     months = {"jan": "jan", "fev": "feb", "mar": "mar", "abr": "apr", "mai": "may", "jun": "jun",
               "jul": "jul", "ago": "aug", "set": "sep", "out": "oct", "nov": "nov", "dez": "dec"}
-    month = months[month]
     weekday = ["segunda-feira", "terça-feira", "quarta-feira", "quinta-feira",
                "sexta-feira", "sabado", "domingo"]
+
+    month = months[month]
     date = str(day) + " " + month + " " + str(year)
     day = datetime.datetime.strptime(date, "%d %b %Y").weekday()
     return weekday[day]
