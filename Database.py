@@ -8,11 +8,9 @@ class Database:
 
     def insert(self, table, values):
         if table == "registro":
-            self.create(table)
             self.__insert_total_records(values)
 
         elif table == "bairro":
-            self.create(table)
             self.__insert_district_records(values)
 
         else:
@@ -20,6 +18,12 @@ class Database:
 
     def create(self, table):
         self.cursor = self.connection.cursor()
+        self.cursor.execute(f"SELECT count(name) FROM sqlite_master WHERE type='table' AND name='{table}';")
+
+        table_exists = bool(self.cursor.fetchone()[0])
+        if table_exists:
+            self.cursor.execute(f"DROP TABLE '{table}'")
+
         query = ""
 
         if table == "registro":
@@ -59,11 +63,11 @@ class Database:
                         ) 
                         VALUES (?, ?, ?);
                 '''
-        try:
-            self.cursor.execute(query, values)
-            self.connection.commit()
-        except sqlite3.OperationalError:
-            print("An error occurred when inserting into table <bairro>")
+        # try:
+        self.cursor.execute(query, values)
+        self.connection.commit()
+        # except sqlite3.OperationalError as e:
+            #print("An error occurred when inserting into table <bairro>:", e)
 
     def __insert_total_records(self, values):
         query = '''
@@ -82,17 +86,24 @@ class Database:
                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
                 '''
 
-        try:
-            self.cursor.execute(query, values)
-            self.connection.commit()
-        except sqlite3.OperationalError:
-            print("An error occurred when inserting into table <registro>")
+        #try:
+        self.cursor.execute(query, values)
+        self.connection.commit()
+        #except sqlite3.OperationalError as err1:
+            #print("An error occurred when inserting into table <registro>:", err1)
+        #except sqlite3.IntegrityError as err2:
+            #print("Unique constraint failed:", err2)
 
+    def update(self, table, field, value, filter_field, filter_value):
+        query = f'''
+                    update {table} set {field} = {value} where {filter_field} = '{filter_value}'
+                '''
 
-    def update(self):
-        pass
+        #try:
+        self.cursor.execute(query)
+        self.connection.commit()
+        #except sqlite3.OperationalError as e:
+            #print("Error:", e)
 
     def delete(self):
         pass
-
-
