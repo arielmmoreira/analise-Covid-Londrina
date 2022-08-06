@@ -53,7 +53,6 @@ class Database:
 
         self.cursor.execute(query)
 
-
     def __insert_district_records(self, values):
         query = '''
                     INSERT INTO "bairro" (
@@ -63,11 +62,11 @@ class Database:
                         ) 
                         VALUES (?, ?, ?);
                 '''
-        # try:
-        self.cursor.execute(query, values)
-        self.connection.commit()
-        # except sqlite3.OperationalError as e:
-            #print("An error occurred when inserting into table <bairro>:", e)
+        try:
+            self.cursor.execute(query, values)
+            self.connection.commit()
+        except sqlite3.OperationalError as e:
+            print("An error occurred when inserting into table <bairro>:", e)
 
     def __insert_total_records(self, values):
         query = '''
@@ -86,24 +85,37 @@ class Database:
                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
                 '''
 
-        #try:
-        self.cursor.execute(query, values)
-        self.connection.commit()
-        #except sqlite3.OperationalError as err1:
-            #print("An error occurred when inserting into table <registro>:", err1)
-        #except sqlite3.IntegrityError as err2:
-            #print("Unique constraint failed:", err2)
+        try:
+            self.cursor.execute(query, values)
+            self.connection.commit()
+        except sqlite3.OperationalError as err1:
+            print("An error occurred when inserting into table <registro>:", err1)
+        except sqlite3.IntegrityError as err2:
+            print("Unique constraint failed:", err2)
 
     def update(self, table, field, value, filter_field, filter_value):
         query = f'''
                     update {table} set {field} = {value} where {filter_field} = '{filter_value}'
                 '''
 
-        #try:
-        self.cursor.execute(query)
-        self.connection.commit()
-        #except sqlite3.OperationalError as e:
-            #print("Error:", e)
+        try:
+            self.cursor.execute(query)
+            self.connection.commit()
+        except sqlite3.OperationalError as e:
+            print(f"An error occurred when updating table <{table}>.", e)
+
+    def read(self, table):
+        query = f'''
+                    SELECT * FROM {table}
+                '''
+
+        try:
+            self.cursor.execute(query)
+            self.connection.commit()
+        except sqlite3.OperationalError as e:
+            print(f"An error occurred when reading from table <{table}>.", e)
+
+        return self.cursor.fetchall()
 
     def delete(self):
         pass

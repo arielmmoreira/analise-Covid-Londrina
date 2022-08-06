@@ -1,10 +1,10 @@
 from extract_records import *
 from Database import *
 import datetime
+import csv
 
 
 def main():
-
     db = Database()
 
     total_records, district_records, symptoms_records = extract_data()
@@ -14,9 +14,47 @@ def main():
     insert_district_records(db, district_records)
     insert_symptoms_records(db, symptoms_records)
 
+    total_records = get_records_from_database(db, "registro")
+    write_csv("registro_total", total_records)
+
+    district_records = get_records_from_database(db, "bairro")
+    write_csv("registro_bairro", district_records)
+
+
+def get_records_from_database(db, table):
+    records = db.read(table)
+    return records
+
+
+def write_csv(name, values):
+    with open(f"{name}.csv", "w", newline='', encoding='utf-16') as file:
+        writer = csv.writer(file)
+
+        if name == "registro_total":
+            writer.writerow(["id", "data", "casos_confirmados", "novos_casos", "recuperados",
+                            "novos_recuperados", "obitos", "novos_obitos", "sintomas"])
+
+            for record in values:
+                record_id, date, weekday, cases, daily_cases, recovered, \
+                    daily_recovered, deaths, daily_deaths, symptoms = record
+
+                row = [record_id, date, weekday, cases, daily_cases, recovered,
+                       daily_recovered, deaths, daily_deaths, symptoms]
+
+                writer.writerow(row)
+
+        elif name == "registro_bairro":
+            writer.writerow(["id", "nome", "casos"])
+
+            for record in values:
+                record_id, name, cases = record
+
+                row = [record_id, name, cases]
+
+                writer.writerow(row)
+
 
 def insert_symptoms_records(db, symptoms_records):
-
     for i in range(len(symptoms_records)):
         month = re.search(r"\s[a-zA-Z]{3}", symptoms_records[i]).group().strip(" ").lower()
         day = re.search(r"\s[0-9]{2},", symptoms_records[i]).group().lstrip(" ").rstrip(",")
