@@ -1,6 +1,7 @@
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.common.by import By
 import re
 
 
@@ -8,6 +9,7 @@ def set_up_driver(url):
     try:
         driver = webdriver.Chrome(r'C:\chromedriver\chromedriver.exe')
         driver.get(url)
+
     except:
         print("An error occurred when setting up driver")
 
@@ -15,14 +17,16 @@ def set_up_driver(url):
 
 
 def get_total_records(driver):
-    records_list = driver.find_elements_by_css_selector(".amcharts-chart-div circle")
+    # records_list = driver.find_elements_by_css_selector(".amcharts-chart-div circle")
+    records_list = driver.find_elements(By.CSS_SELECTOR, ".amcharts-chart-div circle")
     records = [record.get_attribute("aria-label") for record in records_list]
 
     return records
 
 
 def get_symptoms_records(driver):
-    records = driver.find_elements_by_css_selector(".amcharts-graph-column g")
+    # records = driver.find_elements_by_css_selector(".amcharts-graph-column g")
+    records = driver.find_elements(By.CSS_SELECTOR, ".amcharts-graph-column g")
     records = [record.get_attribute("aria-label") for record in records]
 
     return records
@@ -49,7 +53,7 @@ def extract_data():
         district_records = WebDriverWait(driver, timeout, ignored_exceptions=ignored_exceptions).until(get_district_records)
         symptoms_records = WebDriverWait(driver, timeout, ignored_exceptions=ignored_exceptions).until(get_symptoms_records)
     except:
-        print("Error")
+        print('Error extracting data')
         return
 
     total_records = parse_total_records(total_records)
@@ -78,7 +82,8 @@ def parse_total_records(total_records):
 
 
 def get_district_records(driver):
-    records = driver.find_elements_by_xpath("//*[@id='ember160']/margin-container/full-container")
+    # records = driver.find_elements_by_xpath("//*[@id='ember160']/margin-container/full-container")
+    records = driver.find_elements(By.XPATH, "//*[@id='ember144']/margin-container/full-container")
     records_list = records[0].text.split("\n")
     records_list.pop(0)
 

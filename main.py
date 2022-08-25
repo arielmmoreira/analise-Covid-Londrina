@@ -8,9 +8,9 @@ def main():
     db = Database()
 
     total_records, district_records, symptoms_records = extract_data()
-    cases, healed, deaths = total_records
+    cases, recovered, deaths = total_records
 
-    insert_total_records(db, cases, healed, deaths)
+    insert_total_records(db, cases, recovered, deaths)
     insert_district_records(db, district_records)
     insert_symptoms_records(db, symptoms_records)
 
